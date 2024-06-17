@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysArtistMapper">
+    
+    <resultMap type="SysArtist" id="SysArtistResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="hometown"    column="hometown"    />
+        <result property="address"    column="address"    />
+        <result property="phone"    column="phone"    />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+    </resultMap>
+
+    <sql id="selectSysArtistVo">
+        select id, name, nick_name, id_card, hometown, address, phone from sys_artist
+    </sql>
+
+    <select id="selectSysArtistList" parameterType="SysArtist" resultMap="SysArtistResult">
+        <include refid="selectSysArtistVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="hometown != null  and hometown != ''"> and hometown = #{hometown}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysArtistById" parameterType="Long" resultMap="SysArtistResult">
+        <include refid="selectSysArtistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysArtist" parameterType="SysArtist">
+        insert into sys_artist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="idCard != null and idCard != ''">id_card,</if>
+            <if test="hometown != null">hometown,</if>
+            <if test="address != null">address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            update_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="idCard != null and idCard != ''">#{idCard},</if>
+            <if test="hometown != null">#{hometown},</if>
+            <if test="address != null">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateSysArtist" parameterType="SysArtist">
+        update sys_artist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard},</if>
+            <if test="hometown != null">hometown = #{hometown},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysArtistById" parameterType="Long">
+        delete from sys_artist where id = #{id}
+    </delete>
+
+    <delete id="deleteSysArtistByIds" parameterType="String">
+        delete from sys_artist where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
